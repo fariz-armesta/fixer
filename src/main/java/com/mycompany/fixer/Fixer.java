@@ -27,11 +27,12 @@ import javafx.scene.text.Font;
  */
 public class Fixer extends Application {
     private final DatabaseManager db = new DatabaseManager();
+    private Contact editingContact = null;
+    
     @Override
     public void start(Stage stage) {
         stage.getIcons().add(new Image(getClass().getResourceAsStream("/icon.png")));
         Font loadedFont = Font.loadFont(getClass().getResourceAsStream("/fonts/LibreBodoni-VariableFont_wght.ttf"), 12);
-        System.out.println("Loaded font family: " + loadedFont.getFamily());
         Label nameLabel = new Label("Name");
         Label companyLabel = new Label("Company");
         Label emailLabel = new Label("Email");
@@ -75,27 +76,42 @@ public class Fixer extends Application {
 
         Button insertButton = new Button("Insert");
         insertButton.setOnAction(event -> {
-            db.insertContact(
-                nameField.getText(),
-                companyField.getText(),
-                emailField.getText(),
-                phoneField.getText(),
-                tagField.getValue(),
-                socialField.getText(),
-                descField.getText()
-            );
+            if (editingContact != null) {
+                db.updateContact(
+                    editingContact.getId(),
+                    nameField.getText(),
+                    companyField.getText(),
+                    emailField.getText(),
+                    phoneField.getText(),
+                    tagField.getValue(),
+                    socialField.getText(),
+                    descField.getText()
+                );
+                outputLabel.setText("Updated: " + nameField.getText());
+                editingContact = null;
+                insertButton.setText("Insert");
+            } else {
+                db.insertContact(
+                    nameField.getText(),
+                    companyField.getText(),
+                    emailField.getText(),
+                    phoneField.getText(),
+                    tagField.getValue(),
+                    socialField.getText(),
+                    descField.getText()
+                );
+                outputLabel.setText("Saved: " + nameField.getText());
+            }
 
-            outputLabel.setText("Saved: " + nameField.getText());
-
-            // Clear fields after saving
             nameField.clear();
             companyField.clear();
             emailField.clear();
             phoneField.clear();
             tagField.getSelectionModel().clearSelection();
-            descField.clear();
             socialField.clear();
+            descField.clear();
         });
+        
         
         Button viewRecordsButton = new Button("View Records");
         
@@ -108,11 +124,23 @@ public class Fixer extends Application {
 
         Button inputTabButton = new Button("Input");
         Button viewTabButton = new Button("View");
-
+        
+        java.util.function.Consumer<Contact> onEdit = contact -> {
+            editingContact = contact;
+            nameField.setText(contact.getName());
+            companyField.setText(contact.getCompany());
+            emailField.setText(contact.getEmail());
+            phoneField.setText(contact.getPhone());
+            tagField.setValue(contact.getTag());
+            socialField.setText(contact.getSocial());
+            descField.setText(contact.getDesc());
+            insertButton.setText("Update");
+            mainLayout.setCenter(inputView);
+        };
         inputTabButton.setOnAction(event -> mainLayout.setCenter(inputView));
         viewTabButton.setOnAction(event -> {
             List<Contact> contacts = db.getAllContacts();
-            mainLayout.setCenter(new RecordsWindow().build(contacts, db));
+            mainLayout.setCenter(new RecordsWindow().build(contacts, db, onEdit));
         });
 
         HBox tabBar = new HBox(10, inputTabButton, viewTabButton);

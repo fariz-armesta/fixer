@@ -16,11 +16,12 @@ import javafx.collections.transformation.FilteredList;
 import javafx.geometry.Pos;
 import javafx.scene.layout.Priority;
 import javafx.scene.control.TextField;
+import java.util.function.Consumer;
 import java.util.List;
 
 public class RecordsWindow {
 
-    public Parent build(List<Contact> contacts, DatabaseManager db) {
+    public Parent build(List<Contact> contacts, DatabaseManager db, Consumer<Contact> onEdit) {
         TextField searchField = new TextField();
         searchField.setPromptText("Search...");
         searchField.setMaxWidth(300);
@@ -121,10 +122,24 @@ public class RecordsWindow {
                 }
             });
         });
+      
+        Button editSelectedButton = new Button("Edit Selected");
+        editSelectedButton.setOnAction(event -> {
+            Contact selected = table.getSelectionModel().getSelectedItem();
 
-        HBox buttonRow = new HBox(10, deleteSelectedButton, deleteAllButton);
+            if (selected == null) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setHeaderText("No record selected");
+                alert.setContentText("Please click a row first.");
+                alert.showAndWait();
+                return;
+            }
+
+            onEdit.accept(selected);
+        });
+
+        HBox buttonRow = new HBox(10, editSelectedButton, deleteSelectedButton, deleteAllButton);
         buttonRow.setAlignment(Pos.CENTER);
-
         VBox layout = new VBox(10, searchField, table, buttonRow);
         layout.setPadding(new Insets(20));
         VBox.setVgrow(table, Priority.ALWAYS);

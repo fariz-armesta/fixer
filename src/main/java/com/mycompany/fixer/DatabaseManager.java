@@ -111,4 +111,23 @@ public class DatabaseManager {
             e.printStackTrace();
         }
     }
+    
+    public void updateContact(int id, String name, String company, String email,
+                           String phone, String tag, String social, String desc) {
+        String sql = "UPDATE contacts SET name=?, company=?, email=?, phone=?, tag=?, social=?, desc=? WHERE id=?";
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, name);
+            pstmt.setString(2, company);
+            pstmt.setString(3, email);
+            pstmt.setString(4, phone);
+            pstmt.setString(5, tag);
+            pstmt.setString(6, social);
+            pstmt.setString(7, desc);
+            pstmt.setInt(8, id);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
