@@ -22,6 +22,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import java.util.List;
+import javafx.scene.layout.BorderPane;
 /**
  *
  * @author FARIZ-T14
@@ -107,20 +108,32 @@ public class Fixer extends Application {
         });
         Button viewRecordsButton = new Button("View Records");
         
-        VBox root = new VBox(15, formGrid, descLabel, descField, insertButton, viewRecordsButton, deleteAllButton, outputLabel);
-        root.setAlignment(Pos.CENTER);
-        root.setPadding(new Insets(20));
+        VBox inputView = new VBox(15, formGrid, descLabel, descField, insertButton, deleteAllButton, outputLabel);
+        inputView.setAlignment(Pos.CENTER);
+        inputView.setPadding(new Insets(20));
 
-        Scene mainScene = new Scene(root, 700, 450);
+        BorderPane mainLayout = new BorderPane();
+        mainLayout.setCenter(inputView);
+
+        Button inputTabButton = new Button("Input");
+        Button viewTabButton = new Button("View");
+
+        inputTabButton.setOnAction(event -> mainLayout.setCenter(inputView));
+        viewTabButton.setOnAction(event -> {
+            List<Contact> contacts = db.getAllContacts();
+            mainLayout.setCenter(new RecordsWindow().build(contacts));
+        });
+
+        HBox tabBar = new HBox(10, inputTabButton, viewTabButton);
+        tabBar.setAlignment(Pos.CENTER);
+        tabBar.setPadding(new Insets(10));
+        mainLayout.setBottom(tabBar);
+
+        Scene mainScene = new Scene(mainLayout, 700, 500);
+        mainScene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
         stage.setScene(mainScene);
         stage.setTitle("Fixer");
         stage.show();
-        
-        viewRecordsButton.setOnAction(event -> {
-            List<Contact> contacts = db.getAllContacts();
-            Scene recordsScene = new RecordsWindow().build(contacts, stage, mainScene);
-            stage.setScene(recordsScene);
-        });
     }
     
     public static void main(String[] args) {

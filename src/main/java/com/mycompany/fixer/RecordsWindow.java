@@ -3,18 +3,16 @@ package com.mycompany.fixer;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
+import javafx.scene.Parent;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import java.util.List;
 
 public class RecordsWindow {
 
-    public Scene build(List<Contact> contacts, Stage stage, Scene mainScene) {
+    public Parent build(List<Contact> contacts) {
         TableView<Contact> table = new TableView<>();
 
         TableColumn<Contact, String> nameCol = new TableColumn<>("Name");
@@ -40,12 +38,9 @@ public class RecordsWindow {
         ObservableList<Contact> data = FXCollections.observableArrayList(contacts);
         table.setItems(data);
 
-        Button backButton = new Button("Back");
-        backButton.setOnAction(event -> stage.setScene(mainScene));
-
-        VBox layout = new VBox(10, table, backButton);
+        VBox layout = new VBox(10, table);
         layout.setPadding(new Insets(20));
 
-        return new Scene(layout, 800, 400);
+        return layout;
     }
 }
