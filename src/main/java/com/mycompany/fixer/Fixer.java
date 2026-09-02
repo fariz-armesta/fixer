@@ -20,6 +20,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.ComboBox;
 import java.util.List;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.text.Font;
 /**
  *
  * @author FARIZ-T14
@@ -29,7 +30,8 @@ public class Fixer extends Application {
     @Override
     public void start(Stage stage) {
         stage.getIcons().add(new Image(getClass().getResourceAsStream("/icon.png")));
-        
+        Font loadedFont = Font.loadFont(getClass().getResourceAsStream("/fonts/LibreBodoni-VariableFont_wght.ttf"), 12);
+        System.out.println("Loaded font family: " + loadedFont.getFamily());
         Label nameLabel = new Label("Name");
         Label companyLabel = new Label("Company");
         Label emailLabel = new Label("Email");
@@ -64,7 +66,7 @@ public class Fixer extends Application {
         formGrid.add(socialLabel, 5, 0);
         formGrid.add(socialField, 5, 1);
         
-        Label descLabel = new Label("Desc");
+        Label descLabel = new Label("Description");
         TextArea descField = new TextArea();
         descField.setPrefRowCount(5);
         descField.setWrapText(true);
@@ -98,7 +100,7 @@ public class Fixer extends Application {
         Button viewRecordsButton = new Button("View Records");
         
         VBox inputView = new VBox(15, formGrid, descLabel, descField, insertButton, outputLabel);
-        inputView.setAlignment(Pos.CENTER);
+        inputView.setAlignment(Pos.TOP_CENTER);
         inputView.setPadding(new Insets(20));
 
         BorderPane mainLayout = new BorderPane();
@@ -118,7 +120,7 @@ public class Fixer extends Application {
         tabBar.setPadding(new Insets(10));
         mainLayout.setBottom(tabBar);
 
-        Scene mainScene = new Scene(mainLayout, 700, 500);
+        Scene mainScene = new Scene(mainLayout, 750, 400);
         mainScene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
         stage.setScene(mainScene);
         stage.setTitle("Fixer");

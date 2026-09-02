@@ -1,10 +1,11 @@
 .root {
     -fx-background-color: #f4f4f4;
-    -fx-font-family: "Segoe UI";
+    -fx-font-family: "Libre Bodoni";
+    -fx-font-weight: bold;
 }
 
 .button {
-    -fx-background-color: #3b82f6;
+    -fx-background-color: #364046;
     -fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-padding: 8 16 8 16;
@@ -12,7 +13,7 @@
 }
 
 .button:hover {
-    -fx-background-color: #2563eb;
+    -fx-background-color: #2196F3;
 }
 
 .text-field, .text-area, .combo-box {
