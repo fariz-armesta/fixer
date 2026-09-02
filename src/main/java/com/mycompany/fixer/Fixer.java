@@ -92,23 +92,9 @@ public class Fixer extends Application {
             descField.clear();
         });
         
-        Button deleteAllButton = new Button("Delete All");
-        deleteAllButton.setOnAction(event -> {
-            Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-            confirm.setTitle("Confirm Delete");
-            confirm.setHeaderText("Delete all records?");
-            confirm.setContentText("This cannot be undone.");
-
-            confirm.showAndWait().ifPresent(response -> {
-                if (response == ButtonType.OK) {
-                    db.deleteAllContacts();
-                    outputLabel.setText("All records deleted.");
-                }
-            });
-        });
         Button viewRecordsButton = new Button("View Records");
         
-        VBox inputView = new VBox(15, formGrid, descLabel, descField, insertButton, deleteAllButton, outputLabel);
+        VBox inputView = new VBox(15, formGrid, descLabel, descField, insertButton, outputLabel);
         inputView.setAlignment(Pos.CENTER);
         inputView.setPadding(new Insets(20));
 
@@ -121,7 +107,7 @@ public class Fixer extends Application {
         inputTabButton.setOnAction(event -> mainLayout.setCenter(inputView));
         viewTabButton.setOnAction(event -> {
             List<Contact> contacts = db.getAllContacts();
-            mainLayout.setCenter(new RecordsWindow().build(contacts));
+            mainLayout.setCenter(new RecordsWindow().build(contacts, db));
         });
 
         HBox tabBar = new HBox(10, inputTabButton, viewTabButton);

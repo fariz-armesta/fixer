@@ -4,15 +4,21 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.geometry.Pos;
+import javafx.scene.layout.Priority;
 import java.util.List;
 
 public class RecordsWindow {
 
-    public Parent build(List<Contact> contacts) {
+    public Parent build(List<Contact> contacts, DatabaseManager db) {
         TableView<Contact> table = new TableView<>();
 
         TableColumn<Contact, String> nameCol = new TableColumn<>("Name");
@@ -38,8 +44,52 @@ public class RecordsWindow {
         ObservableList<Contact> data = FXCollections.observableArrayList(contacts);
         table.setItems(data);
 
-        VBox layout = new VBox(10, table);
+        Button deleteSelectedButton = new Button("Delete Selected");
+        deleteSelectedButton.setOnAction(event -> {
+            Contact selected = table.getSelectionModel().getSelectedItem();
+
+            if (selected == null) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setHeaderText("No record selected");
+                alert.setContentText("Please click a row first.");
+                alert.showAndWait();
+                return;
+            }
+
+            Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+            confirm.setTitle("Confirm Delete");
+            confirm.setHeaderText("Delete this record?");
+            confirm.setContentText(selected.getName() + " will be permanently deleted.");
+
+            confirm.showAndWait().ifPresent(response -> {
+                if (response == ButtonType.OK) {
+                    db.deleteContactById(selected.getId());
+                    table.getItems().remove(selected);
+                }
+            });
+        });
+        
+        Button deleteAllButton = new Button("Delete All");
+        deleteAllButton.setOnAction(event -> {
+            Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+            confirm.setTitle("Confirm Delete");
+            confirm.setHeaderText("Delete all records?");
+            confirm.setContentText("This cannot be undone.");
+
+            confirm.showAndWait().ifPresent(response -> {
+                if (response == ButtonType.OK) {
+                    db.deleteAllContacts();
+                    table.getItems().clear();
+                }
+            });
+        });
+
+        HBox buttonRow = new HBox(10, deleteSelectedButton, deleteAllButton);
+        buttonRow.setAlignment(Pos.CENTER);
+
+        VBox layout = new VBox(10, table, buttonRow);
         layout.setPadding(new Insets(20));
+        VBox.setVgrow(table, Priority.ALWAYS);
 
         return layout;
     }

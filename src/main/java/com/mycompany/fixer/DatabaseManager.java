@@ -98,4 +98,16 @@ public class DatabaseManager {
 
         return contacts;
     }
+    
+    public void deleteContactById(int id) {
+        String sql = "DELETE FROM contacts WHERE id = ?";
+
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, id);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
