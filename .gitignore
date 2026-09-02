@@ -3,3 +3,4 @@ nbproject/private/
 nb-configuration.xml
 .nb-gradle/
 *.class
+*.db

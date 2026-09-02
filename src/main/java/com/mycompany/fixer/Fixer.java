@@ -17,12 +17,16 @@ import javafx.geometry.Insets;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.GridPane;
 import javafx.scene.image.Image;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
 /**
  *
  * @author FARIZ-T14
  */
 public class Fixer extends Application {
-
+    private final DatabaseManager db = new DatabaseManager();
     @Override
     public void start(Stage stage) {
         stage.getIcons().add(new Image(getClass().getResourceAsStream("/icon.png")));
@@ -32,14 +36,14 @@ public class Fixer extends Application {
         Label emailLabel = new Label("Email");
         Label phoneLabel = new Label("Phone");
         Label tagLabel = new Label("Tag");
-        Label descLabel = new Label("Desc");
     
         TextField nameField = new TextField();
         TextField companyField = new TextField();
         TextField emailField = new TextField();
         TextField phoneField = new TextField();
-        TextField tagField = new TextField();
-        TextField descField = new TextField();
+        ComboBox<String> tagField = new ComboBox<>();
+        tagField.getItems().addAll("Recruiters", "Professional", "Personal", "Other");
+        tagField.setPromptText("Select tag");
         
         GridPane formGrid = new GridPane();
         formGrid.setHgap(10);
@@ -50,30 +54,62 @@ public class Fixer extends Application {
         formGrid.add(emailLabel, 2, 0);
         formGrid.add(phoneLabel, 3, 0);
         formGrid.add(tagLabel, 4, 0);
-        formGrid.add(descLabel, 5, 0);
 
         formGrid.add(nameField, 0, 1);
         formGrid.add(companyField, 1, 1);
         formGrid.add(emailField, 2, 1);
         formGrid.add(phoneField, 3, 1);
         formGrid.add(tagField, 4, 1);
-        formGrid.add(descField, 5, 1);
+        
+        Label descLabel = new Label("Desc");
+        TextArea descField = new TextArea();
+        descField.setPrefRowCount(5);
+        descField.setWrapText(true);
         
         Label outputLabel = new Label();
 
         Button insertButton = new Button("Insert");
         insertButton.setOnAction(event -> {
-            String summary = nameField.getText() + " | " + companyField.getText() + " | "
-                    + emailField.getText() + " | " + phoneField.getText() + " | "
-                    + tagField.getText() + " | " + descField.getText();
-            outputLabel.setText(summary);
+            db.insertContact(
+                nameField.getText(),
+                companyField.getText(),
+                emailField.getText(),
+                phoneField.getText(),
+                tagField.getValue(),
+                descField.getText()
+            );
+
+            outputLabel.setText("Saved: " + nameField.getText());
+
+            // Clear fields after saving
+            nameField.clear();
+            companyField.clear();
+            emailField.clear();
+            phoneField.clear();
+            tagField.getSelectionModel().clearSelection();
+            descField.clear();
+        });
+        
+        Button deleteAllButton = new Button("Delete All");
+        deleteAllButton.setOnAction(event -> {
+            Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+            confirm.setTitle("Confirm Delete");
+            confirm.setHeaderText("Delete all records?");
+            confirm.setContentText("This cannot be undone.");
+
+            confirm.showAndWait().ifPresent(response -> {
+                if (response == ButtonType.OK) {
+                    db.deleteAllContacts();
+                    outputLabel.setText("All records deleted.");
+                }
+            });
         });
 
-        VBox root = new VBox(15, formGrid, insertButton, outputLabel);
+        VBox root = new VBox(15, formGrid, descLabel, descField, insertButton, deleteAllButton, outputLabel);
         root.setAlignment(Pos.CENTER);
         root.setPadding(new Insets(20));
 
-        Scene scene = new Scene(root, 700, 250);
+        Scene scene = new Scene(root, 750, 450);
         stage.setScene(scene);
         stage.setTitle("Fixer");
         stage.show();
