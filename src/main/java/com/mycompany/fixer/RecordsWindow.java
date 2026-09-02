@@ -12,13 +12,19 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.collections.transformation.FilteredList;
 import javafx.geometry.Pos;
 import javafx.scene.layout.Priority;
+import javafx.scene.control.TextField;
 import java.util.List;
 
 public class RecordsWindow {
 
     public Parent build(List<Contact> contacts, DatabaseManager db) {
+        TextField searchField = new TextField();
+        searchField.setPromptText("Search...");
+        searchField.setMaxWidth(300);
+        
         TableView<Contact> table = new TableView<>();
 
         TableColumn<Contact, String> nameCol = new TableColumn<>("Name");
@@ -45,7 +51,36 @@ public class RecordsWindow {
         table.getColumns().addAll(nameCol, companyCol, emailCol, phoneCol, tagCol, socialCol, descCol);
 
         ObservableList<Contact> data = FXCollections.observableArrayList(contacts);
-        table.setItems(data);
+        FilteredList<Contact> filteredData = new FilteredList<>(data, p -> true);
+
+        searchField.textProperty().addListener((obs, oldValue, newValue) -> {
+            filteredData.setPredicate(contact -> {
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+
+                String lowerFilter = newValue.toLowerCase();
+
+                if (contact.getName() != null && contact.getName().toLowerCase().contains(lowerFilter)) {
+                    return true;
+                } else if (contact.getCompany() != null && contact.getCompany().toLowerCase().contains(lowerFilter)) {
+                    return true;
+                } else if (contact.getEmail() != null && contact.getEmail().toLowerCase().contains(lowerFilter)) {
+                    return true;
+                } else if (contact.getPhone() != null && contact.getPhone().toLowerCase().contains(lowerFilter)) {
+                    return true;
+                } else if (contact.getTag() != null && contact.getTag().toLowerCase().contains(lowerFilter)) {
+                    return true;
+                } else if (contact.getSocial() != null && contact.getSocial().toLowerCase().contains(lowerFilter)) {
+                    return true;
+                } else if (contact.getDesc() != null && contact.getDesc().toLowerCase().contains(lowerFilter)) {
+                    return true;
+                }
+                return false;
+            });
+        });
+
+        table.setItems(filteredData);
 
         Button deleteSelectedButton = new Button("Delete Selected");
         deleteSelectedButton.setOnAction(event -> {
@@ -90,7 +125,7 @@ public class RecordsWindow {
         HBox buttonRow = new HBox(10, deleteSelectedButton, deleteAllButton);
         buttonRow.setAlignment(Pos.CENTER);
 
-        VBox layout = new VBox(10, table, buttonRow);
+        VBox layout = new VBox(10, searchField, table, buttonRow);
         layout.setPadding(new Insets(20));
         VBox.setVgrow(table, Priority.ALWAYS);
 
