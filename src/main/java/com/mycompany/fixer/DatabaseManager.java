@@ -22,6 +22,7 @@ public class DatabaseManager {
 
     public DatabaseManager() {
         createTableIfNotExists();
+        createTagsTableIfNotExists();
     }
     
     private void createTableIfNotExists() {
@@ -125,6 +126,73 @@ public class DatabaseManager {
             pstmt.setString(6, social);
             pstmt.setString(7, desc);
             pstmt.setInt(8, id);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    private void createTagsTableIfNotExists() {
+        String createSql = "CREATE TABLE IF NOT EXISTS tags (name TEXT PRIMARY KEY)";
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+             Statement stmt = conn.createStatement()) {
+            stmt.execute(createSql);
+
+            ResultSet rs = stmt.executeQuery("SELECT COUNT(*) AS count FROM tags");
+            if (rs.next() && rs.getInt("count") == 0) {
+                String[] defaults = {"Recruiters", "Professional", "Personal", "Other"};
+                for (String tag : defaults) {
+                    addTag(tag);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<String> getAllTags() {
+        List<String> tags = new ArrayList<>();
+        String sql = "SELECT name FROM tags ORDER BY name";
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                tags.add(rs.getString("name"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return tags;
+    }
+
+    public void addTag(String name) {
+        String sql = "INSERT OR IGNORE INTO tags (name) VALUES (?)";
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, name);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteTag(String name) {
+        String sql = "DELETE FROM tags WHERE name = ?";
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, name);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateTag(String oldName, String newName) {
+        String sql = "UPDATE tags SET name = ? WHERE name = ?";
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, newName);
+            pstmt.setString(2, oldName);
             pstmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

@@ -17,6 +17,11 @@ import javafx.geometry.Pos;
 import javafx.scene.layout.Priority;
 import javafx.scene.control.TextField;
 import java.util.function.Consumer;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableRow;
+import javafx.stage.Stage;
+import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import java.util.List;
 
 public class RecordsWindow {
@@ -82,6 +87,16 @@ public class RecordsWindow {
         });
 
         table.setItems(filteredData);
+        
+        table.setRowFactory(tv -> {
+            TableRow<Contact> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && !row.isEmpty()) {
+                    showDetailWindow(row.getItem());
+                }
+            });
+            return row;
+        });
 
         Button deleteSelectedButton = new Button("Delete Selected");
         deleteSelectedButton.setOnAction(event -> {
@@ -145,5 +160,30 @@ public class RecordsWindow {
         VBox.setVgrow(table, Priority.ALWAYS);
 
         return layout;
+    }
+    
+    private void showDetailWindow(Contact contact) {
+        Stage detailStage = new Stage();
+        detailStage.setTitle(contact.getName());
+        detailStage.getIcons().add(new Image(getClass().getResourceAsStream("/icon.png")));
+
+        Label nameDetail = new Label("Name: " + contact.getName());
+        Label companyDetail = new Label("Company: " + contact.getCompany());
+        Label emailDetail = new Label("Email: " + contact.getEmail());
+        Label phoneDetail = new Label("Phone: " + contact.getPhone());
+        Label tagDetail = new Label("Tag: " + contact.getTag());
+        Label socialDetail = new Label("Social: " + contact.getSocial());
+        Label descDetail = new Label("Description: " + contact.getDesc());
+        descDetail.setWrapText(true);
+
+        VBox detailLayout = new VBox(10,
+            nameDetail, companyDetail, emailDetail,
+            phoneDetail, tagDetail, socialDetail, descDetail
+        );
+        detailLayout.setPadding(new Insets(20));
+
+        Scene detailScene = new Scene(detailLayout, 400, 350);
+        detailStage.setScene(detailScene);
+        detailStage.show();
     }
 }

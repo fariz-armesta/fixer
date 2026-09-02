@@ -20,6 +20,10 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.ComboBox;
 import java.util.List;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.application.Platform;
 import javafx.scene.text.Font;
 /**
  *
@@ -45,7 +49,7 @@ public class Fixer extends Application {
         TextField emailField = new TextField();
         TextField phoneField = new TextField();
         ComboBox<String> tagField = new ComboBox<>();
-        tagField.getItems().addAll("Recruiters", "Professional", "Personal", "Other");
+        tagField.getItems().addAll(db.getAllTags());
         tagField.setPromptText("Select tag");
         TextField socialField = new TextField();
         
@@ -121,6 +125,23 @@ public class Fixer extends Application {
 
         BorderPane mainLayout = new BorderPane();
         mainLayout.setCenter(inputView);
+        
+        Menu fileMenu = new Menu("File");
+        Menu editMenu = new Menu("Edit");
+
+        MenuItem editTagsItem = new MenuItem("Edit Tags");
+        editTagsItem.setOnAction(event -> new TagManagerWindow().show(db, tagField));
+        
+        MenuItem fileItem = new MenuItem("Exit");
+        fileItem.setOnAction(event -> Platform.exit());
+
+        editMenu.getItems().add(editTagsItem);
+        fileMenu.getItems().add(fileItem);
+        
+        MenuBar menuBar = new MenuBar();
+        menuBar.getMenus().addAll(fileMenu, editMenu);
+
+        mainLayout.setTop(menuBar);
 
         Button inputTabButton = new Button("Input");
         Button viewTabButton = new Button("View");
