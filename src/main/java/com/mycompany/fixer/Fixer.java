@@ -21,6 +21,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
+import java.util.List;
 /**
  *
  * @author FARIZ-T14
@@ -104,15 +105,22 @@ public class Fixer extends Application {
                 }
             });
         });
-
-        VBox root = new VBox(15, formGrid, descLabel, descField, insertButton, deleteAllButton, outputLabel);
+        Button viewRecordsButton = new Button("View Records");
+        
+        VBox root = new VBox(15, formGrid, descLabel, descField, insertButton, viewRecordsButton, deleteAllButton, outputLabel);
         root.setAlignment(Pos.CENTER);
         root.setPadding(new Insets(20));
 
-        Scene scene = new Scene(root, 750, 450);
-        stage.setScene(scene);
+        Scene mainScene = new Scene(root, 700, 450);
+        stage.setScene(mainScene);
         stage.setTitle("Fixer");
         stage.show();
+        
+        viewRecordsButton.setOnAction(event -> {
+            List<Contact> contacts = db.getAllContacts();
+            Scene recordsScene = new RecordsWindow().build(contacts, stage, mainScene);
+            stage.setScene(recordsScene);
+        });
     }
     
     public static void main(String[] args) {

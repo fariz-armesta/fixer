@@ -9,6 +9,9 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 /**
  *
  * @author FARIZ-T14
@@ -68,5 +71,31 @@ public class DatabaseManager {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+    
+    public List<Contact> getAllContacts() {
+        List<Contact> contacts = new ArrayList<>();
+        String sql = "SELECT * FROM contacts";
+
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                contacts.add(new Contact(
+                    rs.getInt("id"),
+                    rs.getString("name"),
+                    rs.getString("company"),
+                    rs.getString("email"),
+                    rs.getString("phone"),
+                    rs.getString("tag"),
+                    rs.getString("desc")
+                ));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return contacts;
     }
 }
