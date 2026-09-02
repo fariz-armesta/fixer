@@ -32,9 +32,9 @@ public class DatabaseManager {
                 + "email TEXT,"
                 + "phone TEXT,"
                 + "tag TEXT,"
+                + "social TEXT,"
                 + "desc TEXT"
                 + ");";
-
         try (Connection conn = DriverManager.getConnection(DB_URL);
              Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
@@ -42,12 +42,11 @@ public class DatabaseManager {
             e.printStackTrace();
         }
     }
-    
-    public void insertContact(String name, String company, String email,
-                               String phone, String tag, String desc) {
-        String sql = "INSERT INTO contacts (name, company, email, phone, tag, desc) "
-                + "VALUES (?, ?, ?, ?, ?, ?)";
 
+    public void insertContact(String name, String company, String email,
+                               String phone, String tag, String social, String desc) {
+        String sql = "INSERT INTO contacts (name, company, email, phone, tag, social, desc) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DriverManager.getConnection(DB_URL);
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, name);
@@ -55,7 +54,8 @@ public class DatabaseManager {
             pstmt.setString(3, email);
             pstmt.setString(4, phone);
             pstmt.setString(5, tag);
-            pstmt.setString(6, desc);
+            pstmt.setString(6, social);
+            pstmt.setString(7, desc);
             pstmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -89,6 +89,7 @@ public class DatabaseManager {
                     rs.getString("email"),
                     rs.getString("phone"),
                     rs.getString("tag"),
+                    rs.getString("social"),
                     rs.getString("desc")
                 ));
             }

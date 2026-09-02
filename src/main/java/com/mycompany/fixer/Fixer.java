@@ -7,7 +7,6 @@ package com.mycompany.fixer;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -18,8 +17,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.GridPane;
 import javafx.scene.image.Image;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import java.util.List;
 import javafx.scene.layout.BorderPane;
@@ -38,6 +35,7 @@ public class Fixer extends Application {
         Label emailLabel = new Label("Email");
         Label phoneLabel = new Label("Phone");
         Label tagLabel = new Label("Tag");
+        Label socialLabel = new Label("Social");
     
         TextField nameField = new TextField();
         TextField companyField = new TextField();
@@ -46,6 +44,7 @@ public class Fixer extends Application {
         ComboBox<String> tagField = new ComboBox<>();
         tagField.getItems().addAll("Recruiters", "Professional", "Personal", "Other");
         tagField.setPromptText("Select tag");
+        TextField socialField = new TextField();
         
         GridPane formGrid = new GridPane();
         formGrid.setHgap(10);
@@ -62,6 +61,8 @@ public class Fixer extends Application {
         formGrid.add(emailField, 2, 1);
         formGrid.add(phoneField, 3, 1);
         formGrid.add(tagField, 4, 1);
+        formGrid.add(socialLabel, 5, 0);
+        formGrid.add(socialField, 5, 1);
         
         Label descLabel = new Label("Desc");
         TextArea descField = new TextArea();
@@ -78,6 +79,7 @@ public class Fixer extends Application {
                 emailField.getText(),
                 phoneField.getText(),
                 tagField.getValue(),
+                socialField.getText(),
                 descField.getText()
             );
 
@@ -90,6 +92,7 @@ public class Fixer extends Application {
             phoneField.clear();
             tagField.getSelectionModel().clearSelection();
             descField.clear();
+            socialField.clear();
         });
         
         Button viewRecordsButton = new Button("View Records");

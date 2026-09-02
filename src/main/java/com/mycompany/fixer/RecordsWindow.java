@@ -38,8 +38,11 @@ public class RecordsWindow {
 
         TableColumn<Contact, String> descCol = new TableColumn<>("Desc");
         descCol.setCellValueFactory(new PropertyValueFactory<>("desc"));
+        
+        TableColumn<Contact, String> socialCol = new TableColumn<>("Social");
+        socialCol.setCellValueFactory(new PropertyValueFactory<>("social"));
 
-        table.getColumns().addAll(nameCol, companyCol, emailCol, phoneCol, tagCol, descCol);
+        table.getColumns().addAll(nameCol, companyCol, emailCol, phoneCol, tagCol, socialCol, descCol);
 
         ObservableList<Contact> data = FXCollections.observableArrayList(contacts);
         table.setItems(data);
