@@ -182,6 +182,28 @@ public class Fixer extends Application {
         mainScene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
         stage.setScene(mainScene);
         stage.setTitle("Fixer");
+        
+        Label updateBanner = new Label();
+        updateBanner.setStyle("-fx-background-color: #fff3cd; -fx-text-fill: #856404; -fx-padding: 8;");
+        updateBanner.setMaxWidth(Double.MAX_VALUE);
+        updateBanner.setVisible(false);
+        updateBanner.setManaged(false);
+
+        new Thread(() -> {
+            String latest = UpdateChecker.checkForUpdate();
+            if (latest != null) {
+                javafx.application.Platform.runLater(() -> {
+                    updateBanner.setText("A new update (v" + latest + ") is available — click here to download.");
+                    updateBanner.setVisible(true);
+                    updateBanner.setManaged(true);
+                    updateBanner.setOnMouseClicked(event -> {
+                        getHostServices().showDocument("https://github.com/fariz-armesta/fixer/releases");
+                    });
+                });
+            }
+        }).start();
+
+        mainLayout.setTop(new VBox(menuBar, updateBanner));
         stage.show();
     }
     
