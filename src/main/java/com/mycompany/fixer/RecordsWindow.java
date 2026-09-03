@@ -118,7 +118,7 @@ public class RecordsWindow {
             confirm.showAndWait().ifPresent(response -> {
                 if (response == ButtonType.OK) {
                     db.deleteContactById(selected.getId());
-                    table.getItems().remove(selected);
+                    data.remove(selected);
                 }
             });
         });
@@ -133,7 +133,7 @@ public class RecordsWindow {
             confirm.showAndWait().ifPresent(response -> {
                 if (response == ButtonType.OK) {
                     db.deleteAllContacts();
-                    table.getItems().clear();
+                    data.clear();
                 }
             });
         });
