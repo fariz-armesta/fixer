@@ -75,4 +75,4 @@ This keeps your data intact even when the app is reinstalled or updated.
 
 ## License
 
-Personal project — no license specified yet.
+This project is licensed under the [MIT License](LICENSE).
