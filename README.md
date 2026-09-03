@@ -4,7 +4,8 @@
 
 A desktop CRM for tracking the people behind a job search — recruiters, talent scouts, hiring managers, vendors — and when you last talked to them. Built with JavaFX and SQLite.
 
-![Fixer](src/main/resources/icon.png)
+![Fixer](src/main/resources/Fixer.png)
+![Fixer](src/main/resources/Fixer_view.png)
 
 ## Why this exists
 
