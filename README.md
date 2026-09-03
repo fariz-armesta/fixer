@@ -1,15 +1,24 @@
 # Fixer
 
-A lightweight desktop contact management app built with JavaFX and SQLite. Store contacts with custom tags, search across all fields, and manage everything through a clean, single-window interface.
+> *"You need a fixer, you know how to reach me."* — every fixer in Night City, probably
 
-![Fixer](src/main/resources/Fixer.png)
-![Fixer](src/main/resources/Fixer_view.png)
+A desktop CRM for tracking the people behind a job search — recruiters, talent scouts, hiring managers, vendors — and when you last talked to them. Built with JavaFX and SQLite.
+
+![Fixer](src/main/resources/icon.png)
+
+## Why this exists
+
+Job hunting eventually means fielding messages from a rotating cast of recruiters, talent searchers, companies, and vendors — and losing track of who's who. Who reached out last month? Which recruiter already has your CV? When did you last actually talk to them?
+
+Fixer exists to answer that: a lightweight, always-local record of every "important person" in your job search — who they are, what they're tagged as, and notes on where things stand — instead of scattered emails, LinkedIn DMs, and memory.
+
+The name is a nod to *Cyberpunk 2077*: in Night City, a Fixer is the middleman who lines up your next job. Felt fitting for an app whose entire job is tracking the people lining up yours.
 
 ## Features
 
 - **Contact management** — add, edit, and delete contacts with Name, Company, Email, Phone, Tag, Social, and Description fields
 - **Live search** — filter records instantly across all fields as you type
-- **Custom tags** — create, rename, and remove your own tag categories via Edit → Edit Tags
+- **Custom tags** — create, rename, and remove your own categories (e.g. Recruiter, Vendor, Hiring Manager) via Edit → Edit Tags
 - **Record details** — double-click any row in the table for a full detail view
 - **Local storage** — data is stored in a local SQLite database, no server or internet connection required
 - **Update notifications** — checks for new releases on startup and shows a banner if one is available
@@ -75,4 +84,5 @@ This keeps your data intact even when the app is reinstalled or updated.
 
 ## License
 
-Personal project — no license specified yet.
+This project is licensed under the [MIT License](LICENSE).
+
