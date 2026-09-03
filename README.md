@@ -86,7 +86,3 @@ This keeps your data intact even when the app is reinstalled or updated.
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
-<<<<<<< HEAD
-
-=======
->>>>>>> 2bda01323d8fd3c624d1d660f216cfcee27b4280
