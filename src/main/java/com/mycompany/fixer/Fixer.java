@@ -24,6 +24,7 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.application.Platform;
+import javafx.scene.control.Alert;
 import javafx.scene.text.Font;
 /**
  *
@@ -80,6 +81,14 @@ public class Fixer extends Application {
 
         Button insertButton = new Button("Insert");
         insertButton.setOnAction(event -> {
+            if (nameField.getText().trim().isEmpty()) {
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setHeaderText("Name is required");
+                alert.setContentText("Please enter a name before saving.");
+                alert.showAndWait();
+                return;
+            }
+
             if (editingContact != null) {
                 db.updateContact(
                     editingContact.getId(),
