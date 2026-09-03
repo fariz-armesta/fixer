@@ -18,9 +18,11 @@ import java.util.List;
  */
 public class DatabaseManager {
     
-    private static final String DB_URL = "jdbc:sqlite:fixer.db";
+    private static final String DB_URL = "jdbc:sqlite:" 
+    + System.getProperty("user.home") + "/.fixer/fixer.db";
 
     public DatabaseManager() {
+        new java.io.File(System.getProperty("user.home") + "/.fixer").mkdirs();
         createTableIfNotExists();
         createTagsTableIfNotExists();
     }
@@ -141,8 +143,13 @@ public class DatabaseManager {
             ResultSet rs = stmt.executeQuery("SELECT COUNT(*) AS count FROM tags");
             if (rs.next() && rs.getInt("count") == 0) {
                 String[] defaults = {"Recruiters", "Professional", "Personal", "Other"};
-                for (String tag : defaults) {
-                    addTag(tag);
+                String insertSql = "INSERT OR IGNORE INTO tags (name) VALUES (?)";
+
+                try (PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
+                    for (String tag : defaults) {
+                        pstmt.setString(1, tag);
+                        pstmt.executeUpdate();
+                    }
                 }
             }
         } catch (SQLException e) {
